@@ -1,4 +1,4 @@
-package  com.universidade.reserva.salas;
+package com.universidade.reserva.salas;
 
 public abstract class Sala {
     protected String nome;
