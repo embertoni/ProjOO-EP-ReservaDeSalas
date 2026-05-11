@@ -17,7 +17,7 @@ public class Main {
     private static RelatorioDiarioObserver relatorioObserver;
 
     public static void main(String[] args) {
-        System.out.println("Sistema de Reserva de Salas de Estudo iniciado.\n");
+        System.out.println("Sistema iniciado.\n");
 
         ConfigurationManager config = ConfigurationManager.getInstance();
         System.out.println("Salas disponíveis configuradas: " + config.getAvailableRooms() + "\n");
@@ -25,7 +25,6 @@ public class Main {
         reservaService = new ReservaService();
         scanner = new Scanner(System.in);
 
-        // Registrar observadores
         reservaService.adicionarObservador(new NotificacaoEmailObserver());
         relatorioObserver = new RelatorioDiarioObserver();
         reservaService.adicionarObservador(relatorioObserver);

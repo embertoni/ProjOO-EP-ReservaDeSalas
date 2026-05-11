@@ -1,6 +1,7 @@
 package com.universidade.reserva;
 
 import com.universidade.reserva.factories.SalaFactory;
+import com.universidade.reserva.observers.ObservadoReserva;
 import com.universidade.reserva.salas.Sala;
 import com.universidade.reserva.strategies.PoliticaDeReserva;
 import com.universidade.reserva.strategies.PoliticaPrimeiroAReservar;
@@ -14,14 +15,30 @@ import java.util.stream.Collectors;
 public class ReservaService {
     private List<Reserva> reservas;
     private PoliticaDeReserva politicaDeReserva;
+    private List<ObservadorReserva> observadores;
 
     public ReservaService() {
         this.reservas = new ArrayList<>();
+        this.observadores = new ArrayList<>();
         this.politicaDeReserva = new PoliticaPrimeiroAReservar();
     }
 
-    public void setPoliticoDeReserva(PoliticaDeReserva politicaDeReserva) {
+    public void setPoliticaDeReserva(PoliticaDeReserva politicaDeReserva) {
         this.politicaDeReserva = politicaDeReserva;
+    }
+
+    public void adicionarOberservador(ObservadorReserva observador) {
+        observadores.add(obsevador);
+    }
+
+    public void removerObservador(ObservadorReserva observador) {
+        observadores.remove(observador);
+    }
+
+    private void notificarObservadores(Reserva reserva, String acao) {
+        for (ObservadorReserva obs : observadores) {
+            obs.atualizar(reserva, acao);
+        }
     }
 
     public Reserva criarReserva(String tipoSala, String nomeSala, int capacidadeSala, String usuario, LocalDateTime inicio, LocalDateTime fim) {
@@ -68,5 +85,9 @@ public class ReservaService {
 
     public List<Reserva> gerAllReservas() {
         return new ArrayList<>(reservas);
+    }
+
+    public String getPoliticaDeReservaNome() {
+        return politicaDeReserva.getClass().getSimpleName();
     }
 }
