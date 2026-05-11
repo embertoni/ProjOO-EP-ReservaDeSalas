@@ -1,5 +1,7 @@
 package com.universidade.reserva;
 
+import com.universidade.reserva.observers.NotificacaoEmailObserver;
+import com.universidade.reserva.observers.RelatorioDiarioObserver;
 import com.universidade.reserva.strategies.PoliticaPrimeiroAReservar;
 
 import java.time.LocalDateTime;
@@ -7,13 +9,18 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Sistema de Iniciado.\n");
+        System.out.println("Sistema iniciado.\n");
 
         ConfigurationManager config = ConfigurationManager.getInstance();
         System.out.println("Salas disponíveis configuradas: " + config.getAvailableRooms() + "\n");
 
         ReservaService reservaService = new ReservaService();
         reservaService.setPoliticaDeReserva(new PoliticaPrimeiroAReservar());
+
+        NotificacaoEmailObserver emailObserver = new ReservaService();
+        RelatorioDiarioObserver relatorioObserver = new RelatorioDiarioObserver();
+        reservaService.adicionarObservador(emailObserver);
+        reservaService.adicionarObservador(relatorioObserver);
 
         System.out.println("Tentando criar Reserva 1...");
         Reserva reserva1 = reservaService.criarReserva("individual", "Sala Individual 1", 1, "aluno1", LocalDateTime.of(2026, 5, 11, 9, 0), LocalDateTime.of(2026, 5, 11, 10, 0));
@@ -43,6 +50,8 @@ public class Main {
             }
         }
         System.out.println("\n");
+
+        relatorioObserver.gerarRelatorioDiario(LocalDate.of(2026, 5, 11));
 
         if (reserva1 != null) {
             System.out.println("Tentando cancelar Reserva 1...");
