@@ -1,7 +1,11 @@
 package com.universidade.reserva;
 
+import com.universidade.reserva.decorators.ReservaComEquipamentoMultimidia;
+import com.universidade.reserva.decorators.ReservaComServicoLimpeza;
 import com.universidade.reserva.observers.NotificacaoEmailObserver;
 import com.universidade.reserva.observers.RelatorioDiarioObserver;
+import com.universidade.reserva.salas.Sala;
+import com.universidade.reserva.factories.SalaFactory;
 import com.universidade.reserva.strategies.PoliticaPrimeiroAReservar;
 import com.universidade.reserva.strategies.PoliticaPrioridadeProfessor;
 
@@ -10,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class Main {
     private static ReservaService reservaService;
@@ -44,9 +49,15 @@ public class Main {
             System.out.println("3. Listar Todas as Reservas");
             System.out.println("4. Gerar Relatório Diário");
             System.out.println("5. Mudar Política de Reserva (Atual: " + reservaService.getPoliticaDeReservaNome() + ")");
+            System.out.println("6. Demonstrar Padrão Decorator");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
-            opcao = Integer.parseInt(scanner.nextLine());
+            try {
+                opcao = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Por favor, digite um número.");
+                opcao = -1;
+            }
 
             switch (opcao) {
                 case 1:
@@ -64,6 +75,9 @@ public class Main {
                 case 5:
                     mudarPoliticaDeReserva();
                     break;
+                case 6:
+                    demonstrarDecorator();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -79,8 +93,13 @@ public class Main {
         String tipoSala = scanner.nextLine();
         System.out.print("Nome da Sala: ");
         String nomeSala = scanner.nextLine();
-        System.out.print("Capacidade da Sala (apenas para grupo/laboratorio, digite 0 para individual): ");
-        int capacidadeSala = Integer.parseInt(scanner.nextLine());
+        int capacidadeSala = 0;
+        try {
+            System.out.print("Capacidade da Sala (apenas para grupo/laboratorio, digite 0 para individual): ");
+            capacidadeSala = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Capacidade inválida. Usando 0.");
+        }
         System.out.print("Nome do Usuário: ");
         String usuario = scanner.nextLine();
         System.out.print("Início (AAAA-MM-DD HH:MM): ");
@@ -136,7 +155,12 @@ public class Main {
         System.out.println("1. Política 'Primeiro a Reservar'");
         System.out.println("2. Política 'Prioridade para Professor'");
         System.out.print("Escolha a nova política: ");
-        int escolha = Integer.parseInt(scanner.nextLine());
+        int escolha = -1;
+        try {
+            escolha = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Entrada inválida. Por favor, digite um número.");
+        }
 
         switch (escolha) {
             case 1:
@@ -150,5 +174,35 @@ public class Main {
             default:
                 System.out.println("Opção inválida. A política de reserva não foi alterada.");
         }
+    }
+
+    private static void demonstrarDecorator() {
+        System.out.println("\n--- Demonstração do Padrão Decorator ---");
+
+        Sala salaExemplo = SalaFactory.criarSala("grupo", "Sala de Grupo 305", 10);
+
+        IReserva reservaBase = new Reserva(
+            UUID.randomUUID().toString(), salaExemplo, "alunoDecorator",
+            LocalDateTime.of(2026, 5, 12, 14, 0),
+            LocalDateTime.of(2026, 5, 12, 16, 0)
+        );
+        System.out.println("Reserva Base: " + reservaBase.getDescricao() + " | Custo: " + String.format("%.2f", reservaBase.getCusto()));
+
+        IReserva reservaComMultimidia = new ReservaComEquipamentoMultimidia(reservaBase);
+        System.out.println("Reserva com Multimídia: " + reservaComMultimidia.getDescricao() + " | Custo: " + String.format("%.2f", reservaComMultimidia.getCusto()));
+
+        IReserva reservaCompleta = new ReservaComServicoLimpeza(reservaComMultimidia);
+        System.out.println("Reserva Completa (Multimídia + Limpeza): " + reservaCompleta.getDescricao() + " | Custo: " + String.format("%.2f", reservaCompleta.getCusto()));
+
+        IReserva outraReserva = new Reserva(
+            UUID.randomUUID().toString(), salaExemplo, "professorDecorator",
+            LocalDateTime.of(2026, 5, 12, 16, 0),
+            LocalDateTime.of(2026, 5, 12, 18, 0)
+        );
+        outraReserva = new ReservaComServicoLimpeza(outraReserva);
+        outraReserva = new ReservaComEquipamentoMultimidia(outraReserva);
+        System.out.println("Outra Reserva (Limpeza + Multimídia): " + outraReserva.getDescricao() + " | Custo: " + String.format("%.2f", outraReserva.getCusto()));
+
+        System.out.println("\nObservação: As reservas decoradas acima são apenas para demonstração do padrão Decorator e não são persistidas no ReservaService.");
     }
 }
