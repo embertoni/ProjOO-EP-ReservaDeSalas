@@ -1,6 +1,6 @@
 package com.universidade.reserva.salas;
 
-public class Laboratorio {
+public class Laboratorio extends Sala {
     public Laboratorio(String nome, int capacidade) {
         super(nome, capacidade, "Laboratório");
     }

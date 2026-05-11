@@ -7,6 +7,6 @@ public class SalaDeGrupo extends Sala {
 
     @Override
     public void exibirDetalhes() {
-        System.out.println("Sala de Grupo: ", getNome() + ", Capacidade: " + getCapacidade());
+        System.out.println("Sala de Grupo: " + getNome() + ", Capacidade: " + getCapacidade());
     }
 }

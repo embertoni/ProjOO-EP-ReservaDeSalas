@@ -1,4 +1,4 @@
-package com.unversidade.reserva.salas;
+package com.universidade.reserva.salas;
 
 public class SalaIndividual extends Sala {
     public SalaIndividual(String nome) {

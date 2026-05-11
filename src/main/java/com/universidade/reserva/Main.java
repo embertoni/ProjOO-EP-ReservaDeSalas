@@ -32,7 +32,7 @@ public class Main {
         menuPrincipal();
 
         scanner.close();
-        System.out.println("\nSistema de Reserva de Salas de Estudo finalizado.");
+        System.out.println("\nSistema finalizado.");
     }
 
     private static void menuPrincipal() {
@@ -43,7 +43,7 @@ public class Main {
             System.out.println("2. Cancelar Reserva");
             System.out.println("3. Listar Todas as Reservas");
             System.out.println("4. Gerar Relatório Diário");
-            System.out.println("5. Mudar Política de Reserva (Atual: " + reservaService.politicaDeReserva.getClass().getSimpleName() + ")");
+            System.out.println("5. Mudar Política de Reserva (Atual: " + reservaService.getPoliticaDeReservaNome() + ")");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
             opcao = Integer.parseInt(scanner.nextLine());

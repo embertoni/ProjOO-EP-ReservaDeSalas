@@ -1,7 +1,7 @@
 package com.universidade.reserva;
 
 import com.universidade.reserva.factories.SalaFactory;
-import com.universidade.reserva.observers.ObservadoReserva;
+import com.universidade.reserva.observers.ObservadorReserva;
 import com.universidade.reserva.salas.Sala;
 import com.universidade.reserva.strategies.PoliticaDeReserva;
 import com.universidade.reserva.strategies.PoliticaPrimeiroAReservar;
@@ -27,8 +27,8 @@ public class ReservaService {
         this.politicaDeReserva = politicaDeReserva;
     }
 
-    public void adicionarOberservador(ObservadorReserva observador) {
-        observadores.add(obsevador);
+    public void adicionarObservador(ObservadorReserva observador) {
+        observadores.add(observador);
     }
 
     public void removerObservador(ObservadorReserva observador) {
@@ -44,7 +44,7 @@ public class ReservaService {
     public Reserva criarReserva(String tipoSala, String nomeSala, int capacidadeSala, String usuario, LocalDateTime inicio, LocalDateTime fim) {
         Sala sala = SalaFactory.criarSala(tipoSala, nomeSala, capacidadeSala);
         String idReserva = UUID.randomUUID().toString();
-        Reserva noveReserva = new Reserva(idReserva, sala, usuario, inicio, fim);
+        Reserva novaReserva = new Reserva(idReserva, sala, usuario, inicio, fim);
 
         if (politicaDeReserva.podeReservar(getReservasPorSala(nomeSala), novaReserva)) {
             reservas.add(novaReserva);
@@ -56,7 +56,7 @@ public class ReservaService {
         }
     }
 
-    public booblean cancelarReserva(String idReserva) {
+    public boolean cancelarReserva(String idReserva) {
         Reserva reservaParaCancelar = null;
         for (Reserva r : reservas) {
             if (r.getId().equals(idReserva)) {
@@ -83,7 +83,7 @@ public class ReservaService {
         return reservas.stream().filter(r -> r.getSala().getNome().equals(nomeSala)).collect(Collectors.toList());
     }
 
-    public List<Reserva> gerAllReservas() {
+    public List<Reserva> getAllReservas() {
         return new ArrayList<>(reservas);
     }
 
