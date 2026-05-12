@@ -46,7 +46,7 @@ Este projeto é um aplicativo Java simples de console. Para compilá-lo e execut
 
 2.  Compile os arquivos Java. Você pode fazer isso manualmente ou usando um sistema de build como Maven ou Gradle. Para uma compilação manual simples:
     ```bash
-    javac -d out src/main/java/com/universidade/reserva/*.java src/main/java/com/universidade/reserva/factories/*.java src/main/java/com/universidade/reserva/observers/*.java src/main/java/com/universidade/reserva/salas/*.java src/main/java/com/universidade/reserva/strategies/*.java src/main/java/com/universidade/reserva/decorators/*.java 
+    javac -encoding UTF-8 -d out src/main/java/com/universidade/reserva/*.java src/main/java/com/universidade/reserva/factories/*.java src/main/java/com/universidade/reserva/observers/*.java src/main/java/com/universidade/reserva/salas/*.java src/main/java/com/universidade/reserva/strategies/*.java src/main/java/com/universidade/reserva/decorators/*.java 
     ```
     Isso criará um diretório `out` e colocará os arquivos `.class` compilados lá, mantendo a estrutura de pacotes.
 
